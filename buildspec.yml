@@ -1,4 +1,7 @@
 version: 0.2
+env:
+  variables:
+    S3_BUCKET: "cad.hardylabs.com"
 phases:
   install:
     commands:
@@ -7,8 +10,6 @@ phases:
   build:
     commands:
       - ng build --prod --aot
-artifacts:
-  files:
-    - **/*
-  base-directory: 'dist*'
-  discard-paths: yes
+  post-build:
+    commands:
+      - aws s3 cp dist s3://${S3_BUCKET} --recursive
